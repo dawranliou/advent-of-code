@@ -1,4 +1,4 @@
-(ns dawranliou.advent-of-code.day1)
+(ns dawranliou.advent-of-code-2020.day1)
 
 (def total 2020)
 
