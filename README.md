@@ -1,50 +1,27 @@
-# advent-of-code
+# Advent of Code
 
-FIXME: my new application.
+This repository houses my attempts for the [Advent of Code][adventofcode] in
+[Clojure][]. I hope you can learn from these, but please don't use them to
+cheat.
 
-## Installation
+## Author
 
-Download from https://github.com/dawranliou/advent-of-code
+[Daw-Ran Liou][author-site] ([@dawranliou][author-twitter])
 
-## Usage
+## Unlicenced
 
-FIXME: explanation
+Find the full [unlicense][] in the `UNLICENSE` file, but here's a snippet.
 
-Run the project directly:
+>This is free and unencumbered software released into the public domain.
+>
+>Anyone is free to copy, modify, publish, use, compile, sell, or distribute this
+>software, either in source code form or as a compiled binary, for any purpose,
+>commercial or non-commercial, and by any means.
 
-    $ clojure -M -m dawranliou.advent-of-code
+Do what you want. Learn as much as you can. Unlicense more software.
 
-Run the project's tests (they'll fail until you edit them):
-
-    $ clojure -M:test:runner
-
-Build an uberjar:
-
-    $ clojure -M:uberjar
-
-Run that uberjar:
-
-    $ java -jar advent-of-code.jar
-
-## Options
-
-FIXME: listing of options this app accepts.
-
-## Examples
-
-...
-
-### Bugs
-
-...
-
-### Any Other Sections
-### That You Think
-### Might be Useful
-
-## License
-
-Copyright © 2020 Dawran6
-
-Distributed under the Eclipse Public License either version 1.0 or (at
-your option) any later version.
+[unlicense]: http://unlicense.org/
+[author-site]: http://oli.me.uk/
+[author-twitter]: https://twitter.com/OliverCaldwell
+[adventofcode]: http://adventofcode.com/
+[clojure]: http://clojure.org/
