@@ -1,7 +1,9 @@
-(ns dawranliou.advent-of-code-2020.day-01)
+(ns dawranliou.advent-of-code-2020.day-01
+  (:require [clojure.java.io :as io]))
 
 (def total 2020)
 
+#_
 (def input
   #{1664 1909 1904 1638 1844 1836 1648 1710 1163 1684 1857 1257 1718 1969 1968
     1578 1870 1765 1846 1939 1858 1589 1586 1767 1628 1595 1601 1528 1724 1656
@@ -16,6 +18,12 @@
     1594 1338 1995 1569 1824 1445 1399 1818 1657 1683 1916 1653 1966 82 1102 1535
     1748 1609 1996 722 1646 1167 1784 1616 529 1788 1691 1940 1596 1838 1811 1813
     1591 1741 1606 1871 1997 1827 1492 1789 2002 1702 1876 1251 1237 1510 1093})
+
+(def input
+  (with-open [rdr (io/reader "inputs/day-01.txt")]
+    (->> (line-seq rdr)
+         (map #(Integer/parseInt %))
+         set)))
 
 (defn find-complementary [target s n]
   ((disj s n) (- target n)))
