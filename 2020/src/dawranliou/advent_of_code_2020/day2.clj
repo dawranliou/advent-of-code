@@ -1,7 +1,7 @@
 (ns dawranliou.advent-of-code-2020.day2
   (:require [clojure.java.io :as io]))
 
-(def input "inputs/2020/day-2.txt")
+(def input "inputs/day-02.txt")
 
 (def line-regex
   #"(\d+)-(\d+) (\w): (\w+)")

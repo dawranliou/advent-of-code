@@ -1,7 +1,7 @@
 (ns dawranliou.advent-of-code-2020.day3
   (:require [clojure.java.io :as io]))
 
-(def input "inputs/2020/day3.txt")
+(def input "inputs/day-03.txt")
 
 (def unit-forest
   (with-open [rdr (io/reader input)]
