@@ -1,4 +1,4 @@
-(ns dawranliou.advent-of-code-2020.day3
+(ns dawranliou.advent-of-code-2020.day-03
   (:require [clojure.java.io :as io]))
 
 (def input "inputs/day-03.txt")
