@@ -20,8 +20,8 @@ Find the full [unlicense][] in the `UNLICENSE` file, but here's a snippet.
 
 Do what you want. Learn as much as you can. Unlicense more software.
 
-[unlicense]: http://unlicense.org/
-[author-site]: http://oli.me.uk/
-[author-twitter]: https://twitter.com/OliverCaldwell
-[adventofcode]: http://adventofcode.com/
-[clojure]: http://clojure.org/
+[unlicense]: https://unlicense.org/
+[author-site]: https://dawranliou.com
+[author-twitter]: https://twitter.com/dawranliou
+[adventofcode]: https://adventofcode.com/
+[clojure]: https://clojure.org/
