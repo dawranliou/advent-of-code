@@ -2,7 +2,7 @@
   (:require [clojure.java.io :as io]
             [clojure.string :as s]))
 
-(def input (slurp (io/resource "2020/day-4-input.txt")))
+(def input (slurp "inputs/2020/day4.txt"))
 
 (defn reshape [s]
   (->> (s/split s #" ")
