@@ -24,7 +24,10 @@
 ;; => ({:number 127, :preamble [95 102 117 150 182]})
 
 ;; part 1
-(->> (aoc/with-line "day-09.txt" read-string vec)
+(def input
+  (aoc/with-line "day-09.txt" read-string vec))
+
+(->> input
      (index 25)
      (filter (complement sum-of-any-two?)))
 ;; => ({:number 1309761972,
@@ -54,3 +57,24 @@
 ;;       1483101955
 ;;       1536217310
 ;;       1677440707]})
+
+;; part 2
+(def weakness
+  (->> input
+       (index 25)
+       (filter (complement sum-of-any-two?))
+       first))
+
+(->> (range 2 (inc 5))
+     (mapcat #(partition % 1 [35 20 15 25 47 40 62 55 65 95 102 117 150 182 127 219 299 277 309 576]))
+     (filter #(= 127 (reduce + %))))
+;; => ((15 25 47 40))
+
+(let [numbers
+      (->> (range 2 (inc 25))
+           (mapcat #(partition % 1 input))
+           (filter #(= (:number weakness) (apply + %)))
+           first)]
+  (+ (apply min numbers)
+     (apply max numbers)))
+;; => 177989832
