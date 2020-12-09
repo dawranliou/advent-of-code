@@ -1,7 +1,6 @@
 (ns dawranliou.advent-of-code-2020.day-07
   (:require [dawranliou.aoc :as aoc]
-            [clojure.string :as s]
-            [clojure.walk :as w]))
+            [clojure.string :as s]))
 
 (def test-input
   "light red bags contain 1 bright white bag, 2 muted yellow bags.
@@ -15,89 +14,82 @@ faded blue bags contain no other bags.
 dotted black bags contain no other bags.")
 
 (defn parse [s]
-  (def -s s)
-  (let [[_ container contains] (re-matches #"(.+) bags contain (.+)" s)
-        contents (-> contains
-                     (s/replace "." "")
-                     (s/split #", "))]
-    (if (= contents ["no other bags"])
-      [container nil]
-      [container (some->> contents
-                          (map #(re-find #"(\d+) (.+) bag" %))
-                          (map rest)
-                          (map reverse)
-                          (mapcat (fn [[k v]] [k (read-string v)]))
-                          (apply hash-map))])))
+  (let [[_ desc color content]
+        (re-matches #"(\w+) (\w+) bags contain (.+)\." s)
 
-(mapcat parse (s/split test-input #"\n"))
-;; => (["light red" {"muted yellow" 2, "bright white" 1}]
-;;     ["dark orange" {"muted yellow" 4, "bright white" 3}]
-;;     ["bright white" {"shiny gold" 1}]
-;;     ["muted yellow" {"shiny gold" 2, "faded blue" 9}]
-;;     ["shiny gold" {"vibrant plum" 2, "dark olive" 1}]
-;;     ["dark olive" {"dotted black" 4, "faded blue" 3}]
-;;     ["vibrant plum" {"dotted black" 6, "faded blue" 5}]
-;;     ["faded blue" nil]
-;;     ["dotted black" nil])
+        children (when-not (= "no other bags" content)
+                   (->> (s/split content #", ")
+                        (mapv (fn [child]
+                                (-> (zipmap [:amount :desc :color]
+                                            (rest (re-find #"(\d+) (\w+) (\w+)" child)))
+                                    (update :amount #(Integer/parseInt %)))))))]
+    {:desc desc
+     :color color
+     :children children}))
 
-(def parsed-test-input
-  (apply hash-map
-         (mapcat parse (s/split test-input #"\n"))))
-;; => {"muted yellow" {"shiny gold" 2, "faded blue" 9},
-;;     "light red" {"muted yellow" 2, "bright white" 1},
-;;     "dotted black" nil,
-;;     "dark orange" {"muted yellow" 4, "bright white" 3},
-;;     "bright white" {"shiny gold" 1},
-;;     "shiny gold" {"vibrant plum" 2, "dark olive" 1},
-;;     "faded blue" nil,
-;;     "vibrant plum" {"dotted black" 6, "faded blue" 5},
-;;     "dark olive" {"dotted black" 4, "faded blue" 3}}
+(first
+  (map parse (s/split test-input #"\n")))
+;; => {:desc "light",
+;;     :color "red",
+;;     :children
+;;     [{:amount 1, :desc "bright", :color "white"}
+;;      {:amount 2, :desc "muted", :color "yellow"}]}
 
-(def parsed-input
-  (aoc/with-line "day-07.txt" parse (comp #(apply hash-map %) #(apply concat %))))
+(defn bag->id [bag]
+  (select-keys bag [:desc :color]))
 
-(def test-container-of
-  (->> parsed-test-input
-       (mapcat (fn [[k1 m]]
-                 (for [[k2 c] m]
-                   [k2 k1])))
-       (reduce (fn [m [k v]]
-                 (if (m k)
-                   (update m k conj v)
-                   (assoc m k #{v})))
-               {})))
-;; => {"shiny gold" #{"muted yellow" "bright white"},
-;;     "faded blue" #{"muted yellow" "vibrant plum" "dark olive"},
-;;     "muted yellow" #{"light red" "dark orange"},
-;;     "bright white" #{"light red" "dark orange"},
-;;     "vibrant plum" #{"shiny gold"},
-;;     "dark olive" #{"shiny gold"},
-;;     "dotted black" #{"vibrant plum" "dark olive"}}
+(->> (s/split test-input #"\n")
+     (map parse)
+     first
+     bag->id)
+;; => {:desc "light", :color "red"}
 
-(loop [to-search ["shiny gold"]
-       result #{}]
-  (if (seq to-search)
-    (let [containers (test-container-of (first to-search))]
-      (recur (into (rest to-search) containers) (into result containers)))
-    result))
-;; => #{"muted yellow" "light red" "dark orange" "bright white"}
+(defn parent? [child-id maybe-parent]
+  (->> (:children maybe-parent)
+       (some #(= child-id (bag->id %)))))
 
-(def container-of
-  (->> parsed-input
-       (mapcat (fn [[k1 m]]
-                 (for [[k2 c] m]
-                   [k2 k1])))
-       (reduce (fn [m [k v]]
-                 (if (m k)
-                   (update m k conj v)
-                   (assoc m k #{v})))
-               {})))
+(parent? {:desc "bright" :color "white"}
+         {:desc "faded" :color "yellow"
+          :children [{:amount 1 :desc "bright" :color "white"}
+                     {:amount 2 :desc "muted" :color "yellow"}]})
+;; => true
 
-(count
-  (loop [to-search ["shiny gold"]
-         result #{}]
-    (if (seq to-search)
-      (let [containers (container-of (first to-search))]
-        (recur (into (rest to-search) containers) (into result containers)))
-      result)))
-;; => 378
+(defn direct-parents [bags target-id]
+  (->> bags
+       (keep #(when (parent? target-id %)
+               (bag->id %)))
+       vec))
+
+(direct-parents [{:desc 1 :color 1 :children [{:desc 2 :color 2}]}]
+                {:desc 2 :color 2})
+;; => [{:desc 1, :color 1}]
+
+(defn index [bags]
+  (->> bags
+       (map #(let [bag-id (bag->id %)]
+               [bag-id (assoc % :parents (direct-parents bags bag-id))]))
+       (into {})))
+
+(def bags
+  (aoc/with-line "day-07.txt" parse index))
+
+(defn all-parents [target-id]
+  (let [{:keys [parents]} (get bags target-id)]
+    (concat parents (mapcat all-parents parents))))
+
+;; part 1
+(->>
+  (all-parents {:desc "shiny" :color "gold"})
+  distinct
+  count)
+
+(defn total-bags [target-id]
+  (let [{:keys [children]} (get bags (bag->id target-id))]
+    (map
+      #(* (:amount %) (reduce + 1 (total-bags %)))
+      children)))
+
+;; part 2
+(->> (total-bags {:desc "shiny" :color "gold"})
+     (reduce +))
+;; => 27526
