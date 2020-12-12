@@ -63,5 +63,7 @@
 ;; => 19208
 
 ;; part 2
-(aoc/with-line "day-10.txt" #(Integer/parseInt %) adapter-combinations)
+(time
+  (aoc/with-line "day-10.txt" #(Integer/parseInt %) adapter-combinations))
+;; "Elapsed time: 1.16457 msecs"
 ;; => 43406276662336
