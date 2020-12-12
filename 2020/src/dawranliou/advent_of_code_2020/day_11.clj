@@ -17,7 +17,9 @@ L.LLLLL.LL"))
 
 (def seat-occupied? #{\#})
 (def seat-empty? #{\L})
-(def empty-space? #{nil \. \L})
+(defn empty-space? [s]
+  (contains? #{nil \. \L} s))
+(def seat? #{\# \L})
 
 (defn next-seat-state [seats row col]
   (let [this           (get-in seats [row col])
@@ -81,3 +83,53 @@ L.LLLLL.LL"))
      stable-seats-state
      count-occupied-seats)
 ;; => 2354
+
+(def directions (for [r [-1 0 1]
+                      c [-1 0 1]
+                      :when (not= [r c] [0 0])]
+                  [r c]))
+
+(defn first-seat-in-direction [seats row col max-row max-col [row-dir col-dir]]
+  (->> (iterate (fn [[r c]] [(+ r row-dir) (+ c col-dir)]) [row col])
+       rest
+       (take-while (fn [[r c]] (and (< -1 r max-row) (< -1 c max-col))))
+       (map #(get-in seats %))
+       (filter #(seat? %))
+       first))
+
+(first-seat-in-direction test-input 0 0 10 10 [1 1])
+(first-seat-in-direction test-input 0 0 10 10 [0 -1])
+
+(defn first-seats-in-all-directions [seats row col max-row max-col]
+  (map #(first-seat-in-direction seats row col max-row max-col %) directions))
+
+(every? empty-space? (first-seats-in-all-directions test-input 0 0 10 10))
+(get-in test-input [0 0])
+
+;; part 2
+;; Override the var for convenience
+(defn next-seat-state [seats row col]
+  (let [this           (get-in seats [row col])
+        max-row        (count seats)
+        max-col        (count (first seats))
+        seats-in-sight (first-seats-in-all-directions
+                         seats row col max-row max-col)]
+    (cond
+      ;; Rule #1
+      (and
+        (seat-empty? this)
+        (every? empty-space? seats-in-sight))
+      \#
+      ;; Rule #2
+      (and
+        (seat-occupied? this)
+        (->> seats-in-sight (keep seat-occupied?) count (<= 5)))
+      \L
+      ;; Rule #3
+      :else
+      this)))
+
+(->> (aoc/with-line "day-11.txt" str vec)
+     stable-seats-state
+     count-occupied-seats)
+;; => 2072
