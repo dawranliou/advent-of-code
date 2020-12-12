@@ -30,15 +30,15 @@ F11")
  [0 -1] [-1 0]
  [-1 0] [0 1]}
 
-(defn turn [{:keys [dir] :as state} degree]
-  (assoc state :dir (->> (iterate {[0 1]  [1 0]
-                                   [1 0]  [0 -1]
-                                   [0 -1] [-1 0]
-                                   [-1 0] [0 1]} dir)
-                         (take (inc (mod (/ degree 90) 4)))
-                   last)))
+(defn turn [dir degree]
+  (->> (iterate {[0 1]  [1 0]
+                 [1 0]  [0 -1]
+                 [0 -1] [-1 0]
+                 [-1 0] [0 1]} dir)
+       (take (inc (mod (/ degree 90) 4)))
+       last))
 
-(turn {:dir [0 1]} -90)
+(turn [0 1] -90)
 
 (defn step
   [{:keys [pos dir] :as state}
@@ -49,8 +49,8 @@ F11")
     :S (assoc state :pos (forward pos [0 -1] val))
     :E (assoc state :pos (forward pos [1 0] val))
     :W (assoc state :pos (forward pos [-1 0] val))
-    :R (turn state val)
-    :L (turn state (- val))))
+    :R (assoc state :dir (turn dir val))
+    :L (assoc state :dir (turn dir (- val)))))
 
 (->> test-input
      (reductions step {:pos [0 0] :dir [1 0]})
@@ -68,3 +68,43 @@ F11")
      (map #(if (pos? %) % (- %)))
      (apply +))
 ;; => 820
+
+
+;; Part 2
+;; Right turn matrix
+;; [0  1
+;;  -1 0]
+
+(defn turn* [dir degree]
+  (->> (iterate (fn [[x y]] [y (- x)]) dir)
+       (take (inc (mod (/ degree 90) 4)))
+       last))
+
+(turn* [10 4] 90)
+
+(defn step*
+  [{:keys [pos dir] :as state}
+   {:keys [act val] :as _instruction}]
+  (case act
+    :F (assoc state :pos (forward pos dir val))
+    :N (update-in state [:dir] forward [0 1] val)
+    :S (update-in state [:dir] forward [0 -1] val)
+    :E (update-in state [:dir] forward [1 0] val)
+    :W (update-in state [:dir] forward [-1 0] val)
+    :R (assoc state :dir (turn* dir val))
+    :L (assoc state :dir (turn* dir (- val)))))
+
+(->> test-input
+     (reductions step* {:pos [0 0] :dir [10 1]})
+     last
+     :pos
+     (map #(if (pos? %) % (- %)))
+     (apply +))
+;; => 286
+
+(->> input
+     (reductions step* {:pos [0 0] :dir [10 1]})
+     last
+     :pos
+     (map #(if (pos? %) % (- %)))
+     (apply +))
