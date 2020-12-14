@@ -5,12 +5,12 @@
   (if-let [[_ mask] (re-matches #"mask = ([X01]{36})" l)]
     {:type :mask
      :mask mask}
-    (let [[_ address val] (re-matches #"mem\[(\d+)\] = (\d+)" l)]
-      {:type :mem
-       :address  (Integer/parseInt address)
-       :val  (Integer/parseInt val)})))
+    (let [[_ address value] (re-matches #"mem\[(\d+)\] = (\d+)" l)]
+      {:type    :mem
+       :address (Integer/parseInt address)
+       :value   (Integer/parseInt value)})))
 
-(defn masking [{:keys [mask val]}]
+(defn mask-value [{:keys [mask value]}]
   (->> mask
        reverse
        (map-indexed (fn [address itm] [address itm]))
@@ -19,11 +19,11 @@
                  (case type
                    \0 (bit-clear v n)
                    \1 (bit-set v n)))
-               val)))
+               value)))
 
-(masking {:mask "1XXXX0X" :val 11})  ; => 73
-(masking {:mask "1XXXX0X" :val 101}) ; => 101
-(masking {:mask "1XXXX0X" :val 0})   ; => 64
+(mask-value {:mask "1XXXX0X" :value 11})  ; => 73
+(mask-value {:mask "1XXXX0X" :value 101}) ; => 101
+(mask-value {:mask "1XXXX0X" :value 0})   ; => 64
 
 (def instructions
   (->> (aoc/with-line "day-14.txt" parse vec)
@@ -32,12 +32,9 @@
        (mapcat (fn [[[{:keys [mask]}] ins]]
                  (map #(assoc % :mask mask) ins)))))
 
-(def masked-instructions
-  (->> instructions
-       (map #(assoc % :masked-val (masking %)))))
-
 ;; Part 1
-(->> masked-instructions
+(->> instructions
+     (map #(assoc % :masked-val (mask-value %)))
      (reduce (fn [m {:keys [address masked-val] :as itm}]
                (assoc m address masked-val))
              {})
@@ -50,31 +47,31 @@
   (let [parsed-mask (->> mask
                          reverse
                          (map-indexed (fn [address itm] [address itm])))]
-       ((fn inner [mask address]
-          (if-let [[n m] (last mask)]
-            ;;
-            (case m
-              \0 (inner (drop-last mask) address)
-              \1 (inner (drop-last mask) (bit-set address n))
-              \X (concat (inner (drop-last mask) (bit-clear address n))
-                         (inner (drop-last mask) (bit-set address n))))
-            [address]))
-        parsed-mask address)))
+    ((fn inner [mask address]
+       (if-let [[n m] (last mask)]
+         ;;
+         (case m
+           \0 (inner (drop-last mask) address)
+           \1 (inner (drop-last mask) (bit-set address n))
+           \X (concat (inner (drop-last mask) (bit-clear address n))
+                      (inner (drop-last mask) (bit-set address n))))
+         [address]))
+     parsed-mask address)))
 
-(floating-addresses {:mask "000000000000000000000000000000X1001X"
+(floating-addresses {:mask    "000000000000000000000000000000X1001X"
                      :address 42})
 ;; => (26 27 58 59)
-(floating-addresses {:mask "00000000000000000000000000000000X0XX"
+(floating-addresses {:mask    "00000000000000000000000000000000X0XX"
                      :address 26})
 ;; => (16 17 18 19 24 25 26 27)
 
 ;; Part 2
 (->> instructions
      (map #(assoc % :masked-address (floating-addresses %)))
-     (mapcat (fn [{:keys [masked-address val]}]
-               (map #(hash-map :address % :val val) masked-address)))
-     (reduce (fn [m {:keys [address val] :as itm}]
-               (assoc m address val))
+     (mapcat (fn [{:keys [masked-address value]}]
+               (map #(hash-map :address % :value value) masked-address)))
+     (reduce (fn [m {:keys [address value] :as itm}]
+               (assoc m address value))
              {})
      (reduce (fn [sum mem]
                (+ sum (second mem)))
