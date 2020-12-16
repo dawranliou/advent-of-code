@@ -4,35 +4,27 @@
 
 (def input [1 12 0 20 8 16])
 
-(def indexed-input
-  (->> input
-       (map-indexed (fn [idx itm] {:turn (inc idx) :num itm}))
-       reverse))
+(def prev-turn
+  [(->> input
+        drop-last
+        (map-indexed (fn [idx itm] [itm (inc idx)]))
+        (into {}))
+   {:turn (count input) :num (last input)}])
 
 (def test-input [0 3 6])
-(def indexed-test [{:turn 3 :num 6}
-                   {:turn 2 :num 3}
-                   {:turn 1 :num 0}])
+(def test-prev-turn [{0 1, 3 2} {:turn 3 :num 6}])
 
-(defn turn [prevs]
-  (let [{:keys [turn num] :as most-recent} (first prevs)]
-    (if-let [prev-turn (:prev-turn most-recent)]
-      (into [{:turn      (inc turn)
-              :num       (- turn prev-turn)
-              :prev-turn (->> prevs
-                              (filter #(= (- turn prev-turn) (:num %)))
-                              first
-                              :turn)}]
-            prevs)
-      (into [{:turn      (inc turn)
-              :num       0
-              :prev-turn (->> prevs
-                              (filter #(zero? (:num %)))
-                              first
-                              :turn)}]
-            prevs))))
+(defn turn [[prev-turn {:keys [turn num] :as _most-recent}]]
+  (if-let [num-prev-turn (prev-turn num)]
+    [(assoc prev-turn num turn)
+     {:turn (inc turn)
+      :num  (- turn num-prev-turn)}]
+    [(assoc prev-turn
+            num turn)
+     {:turn (inc turn)
+      :num  0}]))
 
-(->> indexed-test
+(->> test-prev-turn
      turn
      turn
      turn
@@ -41,15 +33,22 @@
      turn
      turn)
 
-(->> (iterate turn indexed-test)
+(->> (iterate turn test-prev-turn)
      (take 2018)
      last
-     first)
-;; => {:turn 2020, :num 436, :prev-turn nil}
+     second)
+;; => {:turn 2020, :num 436}
 
 ;; part 1
-(->> (iterate turn indexed-input)
-     (take (- 2021 (count indexed-input)))
+(->> (iterate turn prev-turn)
+     (take (- 2021 (count input)))
      last
-     first)
-;; => {:turn 2020, :num 273, :prev-turn nil}
+     second)
+;; => {:turn 2020, :num 273}
+
+;; part 2
+(->> (iterate turn prev-turn)
+     (take (- 30000001 (count input)))
+     last
+     second)
+;; => {:turn 30000000, :num 47205}
