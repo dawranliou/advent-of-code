@@ -47,8 +47,10 @@
 ;; => {:turn 2020, :num 273}
 
 ;; part 2
-(->> (iterate turn prev-turn)
-     (take (- 30000001 (count input)))
-     last
-     second)
+(time
+  (->> (iterate turn prev-turn)
+       (take (- 30000001 (count input)))
+       last
+       second))
+;; "Elapsed time: 21343.547631 msecs"
 ;; => {:turn 30000000, :num 47205}
