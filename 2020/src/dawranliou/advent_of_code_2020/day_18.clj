@@ -26,3 +26,26 @@
 ;; part 1
 (aoc/with-line "day-18.txt" (comp eval-math parse) #(apply + %))
 ;; => 202553439706
+
+(defn insert-parens [l]
+  (w/postwalk
+    (fn [form]
+      (if (sequential? form)
+        (->> (partition-by (partial = '*) form)
+             (replace {'(*) '*}))
+        form))
+    l))
+
+(insert-parens '(1 + 2 * 3 + 4 * 5 + 6))
+;; => ((1 + 2) * (3 + 4) * (5 + 6))
+(->> '(1 + 2 * 3 + 4 * 5 + 6)
+     insert-parens
+     eval-math)
+;; => 231
+
+;; part 2
+(aoc/with-line
+  "day-18.txt"
+  (comp eval-math insert-parens parse)
+  #(apply + %))
+;; => 88534268715686
