@@ -6,46 +6,40 @@
 (defn parse [s]
   (edn/read-string (str "(" s ")")))
 
-(defn eval-math [l]
-  (w/postwalk
-    (fn [form]
-      (if (sequential? form)
-        (->> (partition 2 (rest form))
-             (reduce
-               (fn [total [op n]]
-                 ((resolve op) total n))
-               (first form)))
-        form))
-    l))
+(defn sequential-eval [form]
+  (reduce (fn [total [op n]]
+            ((resolve op) total n))
+          (first form)
+          (partition 2 (rest form))))
 
-(eval-math '(1 + 2 * 3 + 4 * 5 + 6))
+(defn walk-math [eval-fn l]
+  (w/postwalk #(if (sequential? %) (eval-fn %) %) l))
+
+(walk-math sequential-eval '(1 + 2 * 3 + 4 * 5 + 6))
 ;; => 71
-(eval-math '(1 + (2 * 3) + (4 * (5 + 6))))
+(walk-math sequential-eval '(1 + (2 * 3) + (4 * (5 + 6))))
 ;; => 51
 
 ;; part 1
-(aoc/with-line "day-18.txt" (comp eval-math parse) #(apply + %))
+(aoc/with-line "day-18.txt"
+  (comp (partial walk-math sequential-eval) parse)
+  #(apply + %))
 ;; => 202553439706
 
-(defn insert-parens [l]
-  (w/postwalk
-    (fn [form]
-      (if (sequential? form)
-        (->> (partition-by (partial = '*) form)
-             (replace {'(*) '*}))
-        form))
-    l))
+(defn insert-parens [form]
+  (->> (partition-by (partial = '*) form)
+       (replace {'(*) '*})))
 
-(insert-parens '(1 + 2 * 3 + 4 * 5 + 6))
+(walk-math insert-parens '(1 + 2 * 3 + 4 * 5 + 6))
 ;; => ((1 + 2) * (3 + 4) * (5 + 6))
 (->> '(1 + 2 * 3 + 4 * 5 + 6)
-     insert-parens
-     eval-math)
+     (walk-math insert-parens)
+     (walk-math sequential-eval))
 ;; => 231
 
 ;; part 2
-(aoc/with-line
-  "day-18.txt"
-  (comp eval-math insert-parens parse)
+(aoc/with-line "day-18.txt"
+  (comp
+    (partial walk-math sequential-eval) (partial walk-math insert-parens) parse)
   #(apply + %))
 ;; => 88534268715686
