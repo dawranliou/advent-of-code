@@ -8,6 +8,10 @@ cheat.
 
 [Daw-Ran Liou][author-site] ([@dawranliou][author-twitter])
 
+## Year
+
+- [2020]
+
 ## Unlicenced
 
 Find the full [unlicense][] in the `UNLICENSE` file, but here's a snippet.
@@ -25,3 +29,4 @@ Do what you want. Learn as much as you can. Unlicense more software.
 [author-twitter]: https://twitter.com/dawranliou
 [adventofcode]: https://adventofcode.com/
 [clojure]: https://clojure.org/
+[2020]: 2020/
