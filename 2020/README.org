@@ -54,3 +54,8 @@
 * Day 18
 - [[https://adventofcode.com/2020/day/18][Question]]
 - [[file:src/dawranliou/advent_of_code_2020/day_18.clj][Solution]]
+* Day 19: Monster Messages
+- [[https://adventofcode.com/2020/day/19][Question]]
+- [[file:src/dawranliou/advent_of_code_2020/day_19.clj][Solution]]
+
+I gave up my own recursive regex solution and seek [[https://github.com/Engelberg/instaparse][instaparse]] for help.
