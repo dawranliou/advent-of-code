@@ -60,3 +60,18 @@ sqjhc mxmxvkd sbzzf (contains fish)"
      (map count)
      (reduce +))
 ;; => 2078
+
+;; part 2
+;; This is easy enough to manually figure out the right answer
+(->> allergen-ingredients
+     (map (fn [[k {:keys [possible]}]] [k possible])))
+;; => (["eggs" #{"npxrdnd" "lmcqt" "ldkt" "kcddk"}]
+;;     ["sesame" #{"fqpt" "lmcqt"}]
+;;     ["peanuts" #{"cfb" "lmcqt" "ldkt"}]
+;;     ["dairy" #{"lmcqt"}]
+;;     ["shellfish" #{"cfb" "lmcqt" "jtfmtpd"}]
+;;     ["soy" #{"fqpt" "lmcqt" "tsch"}]
+;;     ["nuts" #{"cfb" "lmcqt"}]
+;;     ["fish" #{"cfb" "npxrdnd" "lmcqt" "jtfmtpd"}])
+
+;; lmcqt,kcddk,npxrdnd,cfb,ldkt,fqpt,jtfmtpd,tsch
