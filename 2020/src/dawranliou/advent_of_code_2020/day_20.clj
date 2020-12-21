@@ -9,27 +9,29 @@
               (re-matches #"Tile (\d+):")
               second
               read-string)
-     :image (rest lines)}))
+     :image (vec (rest lines))}))
 
 (def tiles
   (->> (str/split input #"\n\n")
        (map parse-tile)))
 
-(defn edges [image]
-  [(first image)
-   (apply str (map first image))
-   (last image)
-   (apply str (map last image))])
+(defn rotate [image]
+  (->> image
+       (apply map vector)
+       (map reverse)
+       (mapv (partial apply str))))
 
-(defn mirror [image]
+(defn flip [image]
   (mapv (comp (partial apply str) reverse) image))
 
-(->> (first tiles)
-     :image
-     ((juxt identity mirror))
-     (map edges))
+(defn edges [image]
+  {:top    (first image)
+   :left   (apply str (map first image))
+   :bottom (last image)
+   :right  (apply str (map last image))})
 
-(->> tiles
-     (map #(assoc %
-                  :edges (edges (:image %))
-                  :edges-r (edges (mirror (:image %))))))
+(def opposite-edge
+  {:top :bottom
+   :left :right
+   :bottom :top
+   :right :left})
