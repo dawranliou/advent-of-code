@@ -75,3 +75,32 @@ sqjhc mxmxvkd sbzzf (contains fish)"
 ;;     ["fish" #{"cfb" "npxrdnd" "lmcqt" "jtfmtpd"}])
 
 ;; lmcqt,kcddk,npxrdnd,cfb,ldkt,fqpt,jtfmtpd,tsch
+
+;; part 2 programmatic solution
+(def known-allergen
+  (loop [allergen-ingredients (map (fn [[k {:keys [possible]}]]
+                                     [k possible])
+                                   allergen-ingredients)
+         known-allergen       {}]
+    (if (seq allergen-ingredients)
+      (let [sorted-allergen-ingredients (sort-by (comp count second) allergen-ingredients)
+            [allergen ingredients] (first sorted-allergen-ingredients)
+            allergen-ingredient (first (remove known-allergen ingredients))]
+        (recur
+          (->> (rest sorted-allergen-ingredients)
+               (map #(update-in % [1] (partial remove known-allergen))))
+          (assoc known-allergen allergen-ingredient allergen)))
+      known-allergen)))
+;; => {"lmcqt" "dairy",
+;;     "fqpt" "sesame",
+;;     "cfb" "nuts",
+;;     "tsch" "soy",
+;;     "ldkt" "peanuts",
+;;     "jtfmtpd" "shellfish",
+;;     "npxrdnd" "fish",
+;;     "kcddk" "eggs"}
+
+(->> (sort-by second known-allergen)
+     (map first)
+     (str/join ","))
+;; => "lmcqt,kcddk,npxrdnd,cfb,ldkt,fqpt,jtfmtpd,tsch"
