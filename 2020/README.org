@@ -1,57 +1,57 @@
 #+TITLE: (= :year 2020)
 
-* Day 1
+* Day 1: Report Repair
 - [[https://adventofcode.com/2020/day/1][Question]]
 - [[file:src/dawranliou/advent_of_code_2020/day_01.clj][Solution]]
-* Day 2
+* Day 2: Password Philosophy
 - [[https://adventofcode.com/2020/day/2][Question]]
 - [[file:src/dawranliou/advent_of_code_2020/day_02.clj][Solution]]
-* Day 3
+* Day 3: Toboggan Trajectory
 - [[https://adventofcode.com/2020/day/3][Question]]
 - [[file:src/dawranliou/advent_of_code_2020/day_03.clj][Solution]]
-* Day 4
+* Day 4: Passport Processing
 - [[https://adventofcode.com/2020/day/4][Question]]
 - [[file:src/dawranliou/advent_of_code_2020/day_04.clj][Solution]]
-* Day 5
+* Day 5: Binary Boarding
 - [[https://adventofcode.com/2020/day/5][Question]]
 - [[file:src/dawranliou/advent_of_code_2020/day_05.clj][Solution]]
-* Day 6
+* Day 6: Custom Customs
 - [[https://adventofcode.com/2020/day/6][Question]]
 - [[file:src/dawranliou/advent_of_code_2020/day_06.clj][Solution]]
-* Day 7
+* Day 7: Handy Haversacks
 - [[https://adventofcode.com/2020/day/7][Question]]
 - [[file:src/dawranliou/advent_of_code_2020/day_07.clj][Solution]]
-* Day 8
+* Day 8: Handheld Halting
 - [[https://adventofcode.com/2020/day/8][Question]]
 - [[file:src/dawranliou/advent_of_code_2020/day_08.clj][Solution]]
-* Day 9
+* Day 9: Encoding Error
 - [[https://adventofcode.com/2020/day/9][Question]]
 - [[file:src/dawranliou/advent_of_code_2020/day_09.clj][Solution]]
-* Day 10
+* Day 10: Adapter Array
 - [[https://adventofcode.com/2020/day/10][Question]]
 - [[file:src/dawranliou/advent_of_code_2020/day_10.clj][Solution]]
-* Day 11
+* Day 11: Seating System
 - [[https://adventofcode.com/2020/day/11][Question]]
 - [[file:src/dawranliou/advent_of_code_2020/day_11.clj][Solution]]
-* Day 12
+* Day 12: Rain Risk
 - [[https://adventofcode.com/2020/day/12][Question]]
 - [[file:src/dawranliou/advent_of_code_2020/day_12.clj][Solution]]
-* Day 13
+* Day 13: Shuttle Search
 - [[https://adventofcode.com/2020/day/13][Question]]
 - [[file:src/dawranliou/advent_of_code_2020/day_13.clj][Solution]]
-* Day 14
+* Day 14: Docking Data
 - [[https://adventofcode.com/2020/day/14][Question]]
 - [[file:src/dawranliou/advent_of_code_2020/day_14.clj][Solution]]
-* Day 15
+* Day 15: Rambunctious Recitation
 - [[https://adventofcode.com/2020/day/15][Question]]
 - [[file:src/dawranliou/advent_of_code_2020/day_15.clj][Solution]]
-* Day 16
+* Day 16: Ticket Translation
 - [[https://adventofcode.com/2020/day/16][Question]]
 - [[file:src/dawranliou/advent_of_code_2020/day_16.clj][Solution]]
-* Day 17
+* Day 17: Conway Cubes
 - [[https://adventofcode.com/2020/day/17][Question]]
 - [[file:src/dawranliou/advent_of_code_2020/day_17.clj][Solution]]
-* Day 18
+* Day 18: Operation Order
 - [[https://adventofcode.com/2020/day/18][Question]]
 - [[file:src/dawranliou/advent_of_code_2020/day_18.clj][Solution]]
 * Day 19: Monster Messages
@@ -59,3 +59,12 @@
 - [[file:src/dawranliou/advent_of_code_2020/day_19.clj][Solution]]
 
 I gave up my own recursive regex solution and seek [[https://github.com/Engelberg/instaparse][instaparse]] for help.
+* Day 20: Jurassic Jigsaw
+- [[https://adventofcode.com/2020/day/20][Question]]
+- [[file:src/dawranliou/advent_of_code_2020/day_20.clj][Solution (WIP)]]
+* Day 21: Allergen Assessment
+- [[https://adventofcode.com/2020/day/21][Question]]
+- [[file:src/dawranliou/advent_of_code_2020/day_21.clj][Solution]]
+
+Part 2 turned out to be much fast for me to manually figure out which allergen
+is which since the search space is very small.
