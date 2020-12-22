@@ -68,3 +68,6 @@ I gave up my own recursive regex solution and seek [[https://github.com/Engelber
 
 Part 2 turned out to be much fast for me to manually figure out which allergen
 is which since the search space is very small.
+* Day 22: Crab Combat
+- [[https://adventofcode.com/2020/day/22][Question]]
+- [[file:src/dawranliou/advent_of_code_2020/day_22.clj][Solution]]
