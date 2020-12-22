@@ -2,11 +2,9 @@
   (:require [clojure.string :as str]))
 
 (let [input (slurp "inputs/day-22.txt")
-      [p-1 p-2] (str/split input #"\n\n")
-      d-1 (map #(Integer/parseInt %) (rest (str/split-lines p-1)))
-      d-2 (map #(Integer/parseInt %) (rest (str/split-lines p-2)))]
-  (def d-1 d-1)
-  (def d-2 d-2))
+      [p-1 p-2] (str/split input #"\n\n")]
+  (def d-1 (map #(Integer/parseInt %) (rest (str/split-lines p-1))))
+  (def d-2 (map #(Integer/parseInt %) (rest (str/split-lines p-2)))))
 
 #_ #_
 (def d-1 [9 2 6 3 1])
@@ -26,7 +24,6 @@
      (filter seq)
      first
      reverse
-     (map-indexed #(vector (inc %1) %2))
-     (map (partial reduce *))
+     (map * (rest (range)))
      (reduce +))
 ;; => 33473
