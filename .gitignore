@@ -11,3 +11,4 @@ checkouts
 .hg/
 .clj-kondo/
 .lsp/
+*.fasl
