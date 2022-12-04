@@ -1,6 +1,7 @@
 (asdf:defsystem #:adventofcode
   :depends-on
-  ("split-sequence")
+  ("split-sequence"
+   "cl-ppcre")
 
   :serial t
   :components
