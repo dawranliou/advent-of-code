@@ -1,0 +1,26 @@
+* Advent of Code
+
+This repository houses my attempts for the [[https://adventofcode.com/][Advent of Code]] in various languages
+like [[https://clojure.org/][Clojure]] and [[https://common-lisp.net/][Common Lisp]]. I hope you can learn from these, but please don't
+use them to cheat.
+
+** Author
+
+[[https://dawranliou.com][Daw-Ran Liou]]
+
+** Year
+
+- [[file:2020/][2020]]
+- [[file:2022/][2022]]
+
+** Unlicenced
+
+Find the full [[https://unlicense.org/][unlicense]] in the [[file:UNLICENSE][UNLICENSE file]], but here's a snippet.
+
+>This is free and unencumbered software released into the public domain.
+>
+>Anyone is free to copy, modify, publish, use, compile, sell, or distribute this
+>software, either in source code form or as a compiled binary, for any purpose,
+>commercial or non-commercial, and by any means.
+
+Do what you want. Learn as much as you can. Unlicense more software.
