@@ -6,6 +6,7 @@
   :components
   ((:module "src"
     :components
-    ((:file "day-01")
+    ((:file "core")
+     (:file "day-01")
      (:file "day-02")
      (:file "day-03")))))

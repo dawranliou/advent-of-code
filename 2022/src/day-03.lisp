@@ -1,5 +1,5 @@
 (defpackage #:day-03
-  (:use #:cl))
+  (:use #:cl #:adventofcode))
 
 (in-package #:day-03)
 
@@ -25,15 +25,8 @@
         sum (parse-line line)))
 ;; (part-1) => 7980
 
-(defun partition-3 (input)
-  (when input
-    (destructuring-bind (a b c &rest rests) input
-      (cons (list a b c) (partition-3 rests)))))
-
-;; (partition-3 '(1 2 3 4 5 6 7 8 9))
-
 (defun part-2 ()
-  (loop for elves in (partition-3 (uiop:read-file-lines +input-filename+))
+  (loop for elves in (partition 3 (uiop:read-file-lines +input-filename+))
         for elves* = (mapcar (lambda (s) (coerce s 'list)) elves)
         sum (item-score (car (reduce #'intersection elves*)))))
 
