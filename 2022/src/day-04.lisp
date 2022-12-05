@@ -3,57 +3,42 @@
 
 (in-package #:day-04)
 
+(defun parse-line (line)
+  (destructuring-bind (pair1 pair2) (split line :separator ",")
+    (let ((range1 (split pair1 :separator "-"))
+          (range2 (split pair2 :separator "-")))
+      (list (mapcar #'parse-integer range1)
+            (mapcar #'parse-integer range2)))))
+
 (defparameter +input+
-  (mapcar (lambda (line)
-            (multiple-value-bind (match strings)
-                (ppcre:scan-to-strings "(\\d+)-(\\d+),(\\d+)-(\\d+)" line)
-              (assert match)
-              (list
-               (list (parse-integer (aref strings 0))
-                     (parse-integer (aref strings 1)))
-               (list (parse-integer (aref strings 2))
-                     (parse-integer (aref strings 3))))))
+  (mapcar #'parse-line
           (uiop:read-file-lines
            (asdf:system-relative-pathname :adventofcode
                                           "src/day-04-input.txt"))))
 
-;; (ppcre:scan-to-strings "(\\d+)-(\\d+),(\\d+)-(\\d+)" "57-93,9-57")
+(defun fully-contained-p (pairs)
+  (destructuring-bind ((min1 max1) (min2 max2)) pairs
+    (or (and (<= min1 min2) (<= max1 max2))
+        (and (<= min2 min1) (<= max2 max1)))))
 
-(defun expand-pair (pair)
-  (destructuring-bind ((a1 a2) (b1 b2)) pair
-    (list
-     (range (1+ a2) :min a1)
-     (range (1+ b2) :min b1))))
-
-;; (expand-pair '((2 4) (6 8)))
-
-(defun fully-contained-p (pair)
-  (destructuring-bind (a b) pair
-    (let ((a-len (length a))
-          (b-len (length b))
-          (overlapped-len (length (intersection a b))))
-      (or (= a-len overlapped-len)
-          (= b-len overlapped-len)))))
-
-;; (fully-contained-p '((6) (4 5 6)))
-;; (fully-contained-p '((6 7) (4 5 6)))
-
+;; (fully-contained-p '((6 6) (4 6)))
+;; (fully-contained-p '((6 7) (4 6)))
 
 (defun part-1 ()
   (loop for pair in +input+
-        count (fully-contained-p (expand-pair pair))))
+        count (fully-contained-p pair)))
 
 ;; (part-1) => 471
 
-(defun overlap (pair)
-  (destructuring-bind (a b) pair
-    (intersection a b)))
+(defun overlapp (pairs)
+  (destructuring-bind ((min1 max1) (min2 max2)) pairs
+    (and (<= min1 max2) (<= min2 max1))))
 
-;; (overlap '((5 6 7) (8 9)))
+;; (overlapp '((5 7) (8 9)))
+;; (overlapp '((5 8) (8 9)))
 
 (defun part-2 ()
-  (loop for pair in +input+
-        for pair* = (expand-pair pair)
-        count (overlap pair*)))
+  (loop for pairs in +input+
+        count (overlapp pairs)))
 
 ;; (part-2) => 888
