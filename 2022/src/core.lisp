@@ -2,7 +2,8 @@
   (:use #:cl)
   (:export #:partition
            #:range
-           #:split))
+           #:split
+           #:transpose))
 
 (in-package #:adventofcode)
 
@@ -26,3 +27,12 @@
 
 ;; (split "1 2 3 4")
 ;; (split "1-2-3-4" :separator "-")
+
+(defun transpose (seq)
+  (loop for i from 0 below (length (first seq))
+        collect (loop for s in seq
+                      when (< i (length s))
+                      collect (elt s i))))
+
+;; (transpose '("1234" "5678"))
+;; (transpose '("1234" "56"))
