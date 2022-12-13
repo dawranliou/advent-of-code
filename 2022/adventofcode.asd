@@ -8,7 +8,4 @@
   :components
   ((:module "src"
     :components
-    ((:file "core")
-     (:file "day-01")
-     (:file "day-02")
-     (:file "day-03")))))
+    ((:file "core")))))
