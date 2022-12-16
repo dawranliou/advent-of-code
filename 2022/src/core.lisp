@@ -3,7 +3,8 @@
   (:export #:partition
            #:range
            #:split
-           #:transpose))
+           #:transpose
+           #:repeat))
 
 (in-package #:adventofcode)
 
@@ -36,3 +37,9 @@
 
 ;; (transpose '("1234" "5678"))
 ;; (transpose '("1234" "56"))
+
+(defun repeat (thing n)
+  (loop repeat n collect thing))
+
+;; (repeat :hi 10)
+;; (repeat '(0 0) 10)
