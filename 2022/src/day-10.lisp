@@ -25,6 +25,11 @@
         (+ (cadr v1) (cadr v2))))
 
 ;; (v+ '(3 5) '(1 2))
+#+nil
+(loop for line in +input+
+      do (loop for instruction in (parse-line line)
+               do (push (v+ instruction (car +cycles+)) +cycles+)))
+;; (setf +cycles+ (reverse +cycles+))
 
 (defun part-1 ()
   (let ((cycles  '((1 1))))
@@ -37,3 +42,25 @@
           sum (* ncycle signal))))
 
 ;; (part-1)
+
+(defun part-2 ()
+  (let ((cycles  '((1 1))))
+    (loop for line in +input+
+          do (loop for instruction in (parse-line line)
+                   do (push (v+ instruction (car cycles)) cycles)))
+    (setf cycles (reverse cycles))
+    (loop for row in (partition 40 cycles)
+          collect (str:join ""
+                            (loop for (n-cycle register) in row
+                                  for n = (mod (1- n-cycle) 40)
+                                  collect (if (<= (1- register) n (1+ register))
+                                              "#"
+                                              "."))))))
+
+;; (part-2)
+;; ("####..##..#....#..#.###..#....####...##."
+;;  "#....#..#.#....#..#.#..#.#....#.......#."
+;;  "###..#....#....####.###..#....###.....#."
+;;  "#....#.##.#....#..#.#..#.#....#.......#."
+;;  "#....#..#.#....#..#.#..#.#....#....#..#."
+;;  "####..###.####.#..#.###..####.#.....##.." ".")
