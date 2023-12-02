@@ -1,8 +1,13 @@
 * Advent of Code
 
-This repository houses my attempts for the [[https://adventofcode.com/][Advent of Code]] in various languages
-like [[https://clojure.org/][Clojure]] and [[https://common-lisp.net/][Common Lisp]]. I hope you can learn from these, but please don't
-use them to cheat.
+This repository houses my attempts for the [[https://adventofcode.com/][Advent
+of Code]] in various languages like:
+
+- [[https://clojure.org/][Clojure]]
+- [[https://common-lisp.net/][Common Lisp]]
+- [[https://janet-lang.org/][Janet]]
+
+I hope you can learn from these, but please don't use them to cheat.
 
 ** Author
 
@@ -12,6 +17,7 @@ use them to cheat.
 
 - [[file:2020/][2020]]
 - [[file:2022/][2022]]
+- [[file:2023/][2023]]
 
 ** Unlicenced
 
