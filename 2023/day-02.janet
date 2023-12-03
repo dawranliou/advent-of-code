@@ -9,18 +9,13 @@ Game 4: 1 green, 3 red, 6 blue; 3 green, 6 red; 3 green, 15 blue, 14 red
 Game 5: 6 red, 1 blue, 3 green; 2 blue, 1 red, 2 green
 ``)
 
-(defn ->set-table [& args]
-  (def table @{})
-  (loop [[n color] :in (partition 2 args)]
-    (put table color n))
-  table)
-
 (def game-grammar
-  ~{:main (sequence :game (any :set))
-    :game (sequence "Game " (number :d*) ": ")
-    :set (/ (sequence (any :reveal) (? "; ")) ,->set-table)
-    :reveal (sequence (number :d*) " " (capture :cube) (? ", "))
-    :cube (choice "blue" "red" "green")})
+  ~{:main (sequence "Game " (number :d*) ": " (some :reveal))
+    :reveal (/ (sequence (some :cubes) (? "; "))
+               ,merge)
+    :cubes (/ (sequence (number :d*) " " (<- :color) (? ", "))
+              ,(comp (partial apply table) reverse! array))
+    :color (choice "blue" "red" "green")})
 
 (comment
   (peg/match game-grammar
