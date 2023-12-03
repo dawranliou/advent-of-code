@@ -38,4 +38,4 @@
   (->> (seq [line :in (file/lines f)]
          (peg/match grammar-part-2 line))
        (map |(+ (* 10 (first $)) (last $)))
-       (reduce2 +)))
+       sum))
