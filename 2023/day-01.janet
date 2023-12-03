@@ -35,7 +35,7 @@
 (with [f (file/open #"input/day-01-sample.txt"
                     "input/day-01-input.txt"
                     )]
-  (->> (seq [line :iterate (file/read f :line)]
+  (->> (seq [line :in (file/lines f)]
          (peg/match grammar-part-2 line))
        (map |(+ (* 10 (first $)) (last $)))
        (reduce2 +)))
