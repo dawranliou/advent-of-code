@@ -1,39 +1,39 @@
-(def sample
-  (slurp "input/day-03-sample.txt"))
-
 (def engine-schema-grammar
   ~{:dot "."
-    :number (/ (sequence (constant :row)
-                         (line)
-                         (constant :col)
-                         (column)
-                         (constant :num)
-                         (number :d*))
-               ,table)
-    :symbol (/ (sequence (constant :row)
-                         (line)
-                         (constant :col)
-                         (column)
-                         (constant :sym)
-                         (<- (if-not (choice :d :dot "\n") 1)))
-               ,table)
-    :line (some (choice :dot :number :symbol))
-    :main (some (sequence :line "\n"))})
+    :number (group (sequence (line)
+                             (column)
+                             (constant :num)
+                             (number :d+)))
+    :symbol (group (sequence (line)
+                             (column)
+                             (constant :sym)
+                             (<- (set "*+#%-/@=$&"))))
+    :line (sequence (some (choice :dot :number :symbol)) "\n")
+    :main (some :line)})
 
 (def engine-schema
   (peg/match engine-schema-grammar
-             # sample
-             (slurp "input/day-03-input.txt")))
+             # (slurp "input/day-03-sample.txt")
+             (slurp "input/day-03-input.txt")
+             ))
 
-(def symbols @{})
+(def symbols "Sparse 2D array of symbols indexed by row then col" @{})
+(def numbers "Sparse 2D array of numbers indexed by row then col" @{})
 
-(loop [item :in engine-schema
-       :let [{:row r :col c :sym ?sym :num ?num} item]]
-  (put-in symbols [r c] item))
+(loop [[id item] :pairs engine-schema
+       :let [[row col type data] item
+             data-length (length (string data))]
+       # Expand the number to occupy the dig-spanning spaces.  E.g. a 3-digit
+       # number '123' at (row, col) of (10, 20) will be expanded to ocupy (10,
+       # 20), (10, 21), and (10, 22)
+       col-offset :range [0 data-length]]
+  (if (= type :num)
+    (put-in numbers [row (+ col col-offset)] {:id id :num data})
+    (put-in symbols [row (+ col col-offset)] {:id id :sym data})))
 
 # Part 1
-(-> (seq [{:row r :col c :num num} :in engine-schema
-          :when num
+(-> (seq [[r c type num] :in engine-schema
+          :when (= type :num)
           :let [num-length (length (string num))
                 # Check all spaces surrounding (and including) the number
                 coords-to-check (seq [r-offset :range-to [-1 1]
@@ -44,22 +44,9 @@
         0))
     sum)
 
-
 # Part 2
-(def numbers @{})
-
-(loop [item :in engine-schema
-       :let [{:row r :col c :num num} item]
-       :when num
-       :let [num-length (length (string num))]
-       # Expand the number to occupy the dig-spanning spaces.  E.g. a 3-digit
-       # number '123' at (row, col) of (10, 20) will be expanded to ocupy (10,
-       # 20), (10, 21), and (10, 22)
-       c-offset :range [0 num-length]]
-  (put-in numbers [r (+ c c-offset)] item))
-
-(-> (seq [{:row r :col c :sym sym} :in engine-schema
-          :when sym
+(-> (seq [[r c type sym] :in engine-schema
+          :when (= type :sym)
           :let [coords-to-check (seq [r-offset :range-to [-1 1]
                                       c-offset :range-to [-1 1]
                                       # Check the 8 spaces around the symbol
