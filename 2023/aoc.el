@@ -4,7 +4,7 @@
   "Save the input of the year 2023 and DAY."
   (interactive "P\nnAdvent of Code 2023 Day: ")
   (let* ((year 2023)
-         (url (format "https://adventofcode.com/2023/day/2/input" day))
+         (url (format "https://adventofcode.com/2023/day/%s/input" day))
          (input (expand-file-name (format "input/day-%02d-input.txt" day)
                                   default-directory))
          (cookie (with-temp-buffer
