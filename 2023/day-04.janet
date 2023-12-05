@@ -21,10 +21,8 @@
 
 # Part 2
 (def card-counts "card id -> count"
-  @{})
-
-(loop [id :range-to [1 (length cards)]]
-  (put card-counts id 1))
+  (tabseq [id :range-to [1 (length cards)]]
+    id 1))
 
 (loop [[id winning-nums my-nums] :in cards
        :let [current-id-copies (get card-counts id)
