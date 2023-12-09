@@ -13,14 +13,27 @@
   (tabseq [[head left right] :in nodes]
     head {"L" left "R" right}))
 
+(defn steps [head end-condition?]
+  (var head head)
+  (var step 0)
+  (while (not (end-condition? head))
+    (let [i (% step (length instruction))
+          move (get instruction i)
+          target (get-in graph [head move])]
+      (set head target)
+      (++ step)))
+  step)
+
 (def part-1
-  (do
-    (var head "AAA")
-    (var step 0)
-    (while (not= head "ZZZ")
-      (let [i (% step (length instruction))
-            move (get instruction i)
-            target (get-in graph [head move])]
-        (set head target)
-        (++ step)))
-    step))
+  (steps "AAA" |(= $ "ZZZ")))
+
+(defn head? [node]
+  (= "A" (string/slice node 2)))
+
+(defn end? [node]
+  (= "Z" (string/slice node 2)))
+
+(def part-2
+  (->> (filter head? (keys graph))
+       (map |(steps $ end?))
+       (reduce2 math/lcm)))
