@@ -1,5 +1,5 @@
-(def input (slurp #"input/day-05-sample.txt"
-                  "input/day-05-input.txt"
+(def input (slurp "input/day-05-sample.txt"
+                  # "input/day-05-input.txt"
                   ))
 
 (def grammar
@@ -45,3 +45,31 @@
                     (src->dest current-num rules))
                   seed
                   mappings))))
+
+# Part 2
+
+# Bruteforce isn't performant enough
+# (let [[seeds & mappings] parsed-input]
+#   (min ;(seq [[seed-start seed-range] :in (partition 2 seeds)
+#               seed :range [seed-start (+ seed-start seed-range)]]
+#           (reduce (fn [current-num [_from _to & rules]]
+#                     (src->dest current-num rules))
+#                   seed
+#                   mappings))))
+
+(def [seeds & mappings] parsed-input)
+
+(def seed-ranges
+  (partition 2 seeds))
+
+(defn second [x] (get x 1))
+
+(defn overlap? [r1 r2]
+  (let [[start-1 length-1] r1
+        [start-2 length-2] r2]
+    (or (<= start-1 start-2 (+ start-1 length-1 -1))
+        (<= start-2 start-1 (+ start-2 length-2 -1)))))
+
+(catseq [seed-range :in seed-ranges]
+        (seq [[dest-start src-start range-length] :in mappings
+              :when (overlap? seed-range [src-start range-length])]))
